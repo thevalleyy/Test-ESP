@@ -105,7 +105,7 @@ void setup()
   pinMode(PIN_POWER_SWITCH, INPUT_PULLUP);
 
   // Turn on status LED to indicate program has loaded
-  // digitalWrite(PIN_LED_STATUS, HIGH);
+  digitalWrite(PIN_LED_STATUS, HIGH);
 
   Serial.begin(115200); // debug serial terminal
 
@@ -134,9 +134,20 @@ void setup()
   pinMode(PIN_BUTTON_MODE, INPUT_PULLUP);
   pinMode(PIN_BUTTON2_MODE, INPUT_PULLUP);
 
-  // CLI setup
+  print("GPIO14: %d, GPIO22 %d\n", digitalRead(PIN_BUTTON_MODE), digitalRead(PIN_BUTTON2_MODE));
+
+  // Reset preferences if both buttons are depressed
+  if ((digitalRead(PIN_BUTTON_MODE) == LOW) && (digitalRead(PIN_BUTTON2_MODE) == LOW))
+  {
+    print("Editing preferences\n");
+    start_cli();
+    ESP.restart();
+  }
+
+  // CLI setup if button is depressed
   if (digitalRead(PIN_BUTTON_MODE) == LOW)
   {
+    print("Entering CLI mode\n");
     start_web_server(WEB_SETUP);
     bool led_state = HIGH;
     while (true)
@@ -150,12 +161,6 @@ void setup()
       led_state = !led_state;
       delay(250);
     }
-  }
-
-  if ((digitalRead(PIN_BUTTON_MODE) == LOW) && (digitalRead(PIN_BUTTON2_MODE) == LOW))
-  {
-    start_cli();
-    ESP.restart();
   }
 
   print("Loading preferences\n");
