@@ -1,8 +1,8 @@
 #ifndef _CLI_H
 #define _CLI_H
 
-// This header and its associated CLI.cpp file define functions that make use of the 
-// CLIMenu and CLIMenuItem classes to create a command-line interface for setting up 
+// This header and its associated CLI.cpp file define functions that make use of the
+// CLIMenu and CLIMenuItem classes to create a command-line interface for setting up
 // the Audiobox. Many of the functions read/write from the ESP32's non-volatile
 // Preferences memory. The CLI requires a USB connection to the ESP32.
 
@@ -40,4 +40,4 @@ bool get_and_save_spotify_refresh_token(const char *auth_code);
 // Helper function for Spotify user authentication flow.
 bool get_and_save_spotify_user_name();
 
-#endif  // _CLI_H
+#endif // _CLI_H

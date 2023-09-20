@@ -9,19 +9,19 @@
 
 // The Spotify class is intended to be instantiated once, and encapsulates all interactions with
 // the Spotify Web API. The main purpose of the Spotify object is to regularly query the API for
-// information on the linked user's playback state/position. 
+// information on the linked user's playback state/position.
 //
 // The Spotify Web API provides query responses in json format. ArduinoJson is used to deserialize
 // these responses and parse their contents for the information we need.
 //
-// The class also exposes a few static methods required for generating the authorization code and 
+// The class also exposes a few static methods required for generating the authorization code and
 // refresh token needed to authenticate with the web API. Full documentation for the Spotify Web API
 // can be found here: https://developer.spotify.com/documentation/web-api/.
 
 // URLs and other constants
 const char SPOTIFY_AUTH_URL[] = "https://accounts.spotify.com/authorize";
 const char SPOTIFY_TOKEN_URL[] = "https://accounts.spotify.com/api/token";
-const char SPOTIFY_REDIRECT_URI[] = "http%3A%2F%2F192.168.3.147%2Fspotify-auth";        // TODO: replace hardcoded IP
+const char SPOTIFY_REDIRECT_URI[] = "http%3A%2F%2F192.168.137.80%2Fspotify-auth"; // TODO: replace hardcoded IP
 const char SPOTIFY_SCOPE[] = "user-read-playback-state+user-read-playback-position";
 const char SPOTIFY_PLAYER_URL[] = "https://api.spotify.com/v1/me/player";
 const char SPOTIFY_USER_URL[] = "https://api.spotify.com/v1/me";
@@ -31,14 +31,15 @@ const char SPOTIFY_FEATURES_URL[] = "https://api.spotify.com/v1/audio-features";
 // Commented values were empirically found to be the average document size for each response type, however,
 // these are set to the same value to reduce heap fragmentation.
 // See here for more details on ArduinoJson memory usage: https://arduinojson.org/v6/how-to/reduce-memory-usage/
-#define SPOTIFY_TOKEN_JSON_SIZE 2000          // ~300 bytes
-#define SPOTIFY_PLAYER_JSON_SIZE 2000         // 5000~6000 bytes ==> 2000 bytes of json memory after filtering
-#define SPOTIFY_FEATURES_JSON_SIZE 2000       // ~600 bytes
-#define SPOTIFY_REFRESH_TOKEN_JSON_SIZE 2000  // ~500 bytes
+#define SPOTIFY_TOKEN_JSON_SIZE 2000         // ~300 bytes
+#define SPOTIFY_PLAYER_JSON_SIZE 2000        // 5000~6000 bytes ==> 2000 bytes of json memory after filtering
+#define SPOTIFY_FEATURES_JSON_SIZE 2000      // ~600 bytes
+#define SPOTIFY_REFRESH_TOKEN_JSON_SIZE 2000 // ~500 bytes
 #define SPOTIFY_USER_JSON_SIZE 2000
 
-class Spotify {
-   public:
+class Spotify
+{
+public:
     // Constructor, takes a Spotify client (developer) ID, authorization string, and refresh token.
     // These parameters are typically stored in the ESP32's non-volatile Preferences and set via the
     // command-line or web setup of the Spotify account. See set_spotify_client_id() and set_spotify_account()
@@ -46,7 +47,8 @@ class Spotify {
     Spotify(const char *client_id, const char *auth_b64, const char *refresh_token);
 
     // Struct for album art details
-    struct album_art_t {
+    struct album_art_t
+    {
         bool loaded = false;
         bool changed = false;
         char url[CLI_MAX_CHARS] = {0};
@@ -57,7 +59,8 @@ class Spotify {
 
     // Struct for Spotify data shared with other tasks. This struct is designed to be
     // relatively small (32 bytes) as it is sent via the eventhandler to various tasks.
-    struct public_data_t {
+    struct public_data_t
+    {
         bool is_active = false;
         double track_progress = 0.0;
 
@@ -67,9 +70,9 @@ class Spotify {
         uint8_t *art_data = NULL;
         unsigned long art_num_bytes = 0;
     };
-    
+
     // Static methods for Spotify account setup
-    
+
     // Given a client (developer) ID and an authorization string, generates a URL where a Spotify user can
     // provide permission to view their playback details. The auth_url string should be able to hold
     // at least HTTP_MAX_CHARS bytes.
@@ -107,7 +110,7 @@ class Spotify {
     // Returns a struct with Spotify playback data.
     public_data_t get_data();
 
-   private:
+private:
     // Gets an authenticated token for use with the Spotify Web API
     // and updates the token variable. Returns true on
     // success and false otherwise.
@@ -182,4 +185,4 @@ class Spotify {
     public_data_t _public_data;
 };
 
-#endif  // _SPOTIFY_H
+#endif // _SPOTIFY_H

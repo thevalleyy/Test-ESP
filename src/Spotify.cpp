@@ -28,6 +28,8 @@ bool Spotify::get_refresh_token(const char *auth_b64, const char *auth_code, cha
     char request_data[HTTP_MAX_CHARS];
     snprintf(request_data, HTTP_MAX_CHARS, "grant_type=authorization_code&code=%s&redirect_uri=%s", auth_code, SPOTIFY_REDIRECT_URI);
 
+    print("request_data from get_refresh_token: %s\n", request_data);
+
     int httpCode = http.POST(request_data);
 
     String response = http.getString();
@@ -219,13 +221,6 @@ bool Spotify::_get_token()
     snprintf(request_data, HTTP_MAX_CHARS, "grant_type=refresh_token&refresh_token=%s", _refresh_token);
 
     // Print the complete request including URL, headers, and data
-    print("Request Method: POST\n");
-    print("Request URL: %s\n", SPOTIFY_TOKEN_URL);
-    print("Request Headers:\n");
-    for (int i = 0; i < http.headers(); i++)
-    {
-        print("%s: %s\n", http.headerName(i).c_str(), http.header(i).c_str());
-    }
     print("Request Body:\n");
     print("%s\n", request_data); // Print the request data
 

@@ -22,6 +22,8 @@
 #include "Utils.h"
 #include "WebServer.h"
 
+SET_LOOP_TASK_STACK_SIZE(8192 * 4);
+
 /*** Function Prototypes ***/
 
 // Display Functions
@@ -148,6 +150,7 @@ void setup()
   if (digitalRead(PIN_BUTTON_MODE) == LOW)
   {
     print("Entering CLI mode\n");
+    print("starting web server\n");
     start_web_server(WEB_SETUP);
     bool led_state = HIGH;
     while (true)
@@ -174,6 +177,7 @@ void setup()
   if (!connect_wifi())
   {
     print("Wifi could not connect! Entering AP mode, please connect to network %s\n", APP_NAME);
+    print("starting web server\n");
     start_web_server(WEB_AP); // start in ap mode
 
     bool led_state = HIGH;
@@ -186,6 +190,7 @@ void setup()
     }
   }
 
+  print("starting web server\n");
   start_web_server(WEB_CONTROL);
 
   // test_modes();
